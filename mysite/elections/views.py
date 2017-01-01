@@ -1,5 +1,5 @@
-from django.shortcuts import render
-from django.http import HttpResponse, HttpResponseRedirect
+from django.shortcuts import render, get_object_or_404
+from django.http import HttpResponse, HttpResponseRedirect, HttpResponseNotFound, Http404
 from django.db.models import Sum
 
 from .models import Candidate, Poll, Choice
@@ -11,6 +11,14 @@ def index(request):
     candidates = Candidate.objects.all()
     context = {'candidates':candidates}
     return render(request, 'elections/index.html', context)
+
+def candidates(request, name):
+    candidate = get_object_or_404(Candidate, name = name)
+    # try:
+    #     candidate = Candidate.objects.get(name = name)
+    # except:
+    #     raise Http404
+    return HttpResponse(candidate.name)
 
 def areas(request, area):
     today = datetime.datetime.now()
